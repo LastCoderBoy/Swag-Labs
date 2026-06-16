@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import pages.LoginPage;
+import util.JavaScriptUtil;
 
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 @Listeners(TestListener.class)
 public class BaseTest {
     protected BasePage basePage;
+    protected JavaScriptUtil jsUtil;
     protected LoginPage loginPage; // Adding this instance, as every test will go through this page.
     protected WebDriver driver;
     private final String SWAGLABS_URL = "https://www.saucedemo.com/";
@@ -39,13 +41,16 @@ public class BaseTest {
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+        jsUtil = new JavaScriptUtil(driver);
     }
 
     @BeforeMethod
     public void loadApplication(){
         driver.get(SWAGLABS_URL);
-        basePage = new BasePage(driver);
-        loginPage = new LoginPage(driver);
+        jsUtil.clearAllStorage();
+        driver.navigate().refresh();
+        basePage = new BasePage(driver, jsUtil);
+        loginPage = new LoginPage(driver, jsUtil);
     }
 
     @AfterClass

@@ -48,5 +48,7 @@ logs/
 .env.local
 .env.*.local
 
-# Test reports directory
+# Reports directory
 /reports
+/allure-results
+.allure

@@ -12,8 +12,9 @@ public class BasePage {
     protected WebDriver driver;
     protected JavaScriptUtil jsUtil;
 
-    public BasePage(WebDriver driver) {
+    public BasePage(WebDriver driver, JavaScriptUtil jsUtil) {
         this.driver = driver;
+        this.jsUtil = jsUtil;
     }
 
     // find By Locator
@@ -22,7 +23,7 @@ public class BasePage {
     }
 
     protected List<WebElement> findAll(By locator) {
-        return WaitUtils.waitForVisibleAll(driver, locator);
+        return driver.findElements(locator);
     }
 
     // Send value to prompts

@@ -79,4 +79,62 @@ public class ProductTests extends BaseTest {
         Assert.assertEquals(sorted, prices, "Products are not sorted from high to low price order");
     }
 
+
+    // ====================================
+    // Add-To-Cart and Remove Buttons Tests
+    // ====================================
+
+    @Test
+    public void shouldDisplayRemoveButton_WhenAddToCartButtonIsClicked() {
+        String productName = "Sauce Labs Backpack";
+        productsPage.clickAddToCartButton(productName);
+
+        String productButtonText = productsPage.getRemoveFromCartButtonText(productName);
+        int badgeCounter = productsPage.getCartBadgeCounter();
+
+        Assert.assertEquals(badgeCounter, 1, "Cart badge counter did not update to 1 after adding product to cart");
+        Assert.assertEquals(productButtonText, "Remove", "Button text did not change to 'Remove' after adding to cart");
+    }
+
+    @Test
+    public void shouldDisplayAddToCartButton_WhenRemoveButtonIsClicked() {
+        // Setup
+        String productName = "Sauce Labs Onesie";
+        productsPage.clickAddToCartButton(productName);
+
+        // Guard assertion - verify setup succeeded before testing remove
+        Assert.assertEquals(
+                productsPage.getRemoveFromCartButtonText(productName),
+                "Remove",
+                "Precondition failed - Add to Cart did not work"
+        );
+
+        productsPage.clickRemoveFromCartButton(productName); // When, we remove it from the cart
+
+        String productButtonText = productsPage.getAddToCartButtonText(productName);
+
+        Assert.assertEquals(productButtonText, "Add to cart", "Button text did not change back to 'Add to cart' after removing from cart");
+    }
+
+    @Test
+    public void shouldUpdateCartBadgeCounter_WhenProductsAreAddedAndRemoved() {
+        String productName1 = "Sauce Labs Backpack";
+        String productName2 = "Sauce Labs Fleece Jacket";
+
+        // Add first product to cart
+        productsPage.clickAddToCartButton(productName1);
+        Assert.assertEquals(productsPage.getCartBadgeCounter(), 1, "Cart badge counter did not update to 1 after adding first product");
+
+        // Add second product to cart
+        productsPage.clickAddToCartButton(productName2);
+        Assert.assertEquals(productsPage.getCartBadgeCounter(), 2, "Cart badge counter did not update to 2 after adding second product");
+
+        // Remove first product from cart
+        productsPage.clickRemoveFromCartButton(productName1);
+        Assert.assertEquals(productsPage.getCartBadgeCounter(), 1, "Cart badge counter did not update to 1 after removing first product");
+
+        // Remove second product from cart
+        productsPage.clickRemoveFromCartButton(productName2);
+        Assert.assertEquals(productsPage.getCartBadgeCounter(), 0, "Cart badge counter did not update to 0 after removing second product");
+    }
 }

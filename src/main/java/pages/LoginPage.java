@@ -3,6 +3,7 @@ package pages;
 import base.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import util.JavaScriptUtil;
 
 public class LoginPage extends BasePage {
 
@@ -11,8 +12,8 @@ public class LoginPage extends BasePage {
     private final By loginButton = By.id("login-button");
     private final By errorMessage = By.cssSelector("h3[data-test='error']");
 
-    public LoginPage(WebDriver driver) {
-        super(driver);
+    public LoginPage(WebDriver driver, JavaScriptUtil jsUtil) {
+        super(driver, jsUtil);
     }
 
     public void enterUsername(String username){
@@ -25,7 +26,7 @@ public class LoginPage extends BasePage {
 
     public ProductsPage clickLoginButton(){
         click(loginButton);
-        return new ProductsPage(driver);
+        return new ProductsPage(driver, jsUtil);
     }
 
     public String getErrorMessage(){

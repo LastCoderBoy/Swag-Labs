@@ -1,0 +1,72 @@
+name: Swag Labs Test Suite
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  selenium-tests:
+    name: Run Cucumber Selenium Tests
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ── 1. Check out the repository ──────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Java 22 (matches your pom.xml compiler target) ─────────
+      - name: Set up JDK 22
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'
+          distribution: 'temurin'
+          cache: maven
+
+      # ── 3. Install Google Chrome ──────────────────────────────────────────
+      # ubuntu-latest ships with Chrome but pinning the setup ensures
+      # ChromeDriver and the browser version always match.
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      # ── 4. Build project (compile only, skip tests at this stage) ─────────
+      - name: Build project
+        run: mvn clean compile -q
+
+      # ── 5. Run Cucumber tests via TestNG + Surefire ───────────────────────
+      # -Dheadless=true is read from ChromeOptions setup in the BaseTest class.
+      # Surefire picks up TestRunner because it extends AbstractTestNGCucumberTests.
+      - name: Run Selenium tests (headless)
+        run: |
+          mvn test \
+            -Dheadless=true \
+            -Dsurefire.failIfNoSpecifiedTests=false
+        env:
+          # Prevents "no display" errors on the Linux CI runner
+          DISPLAY: :99
+
+      # ── 6. Upload Cucumber HTML report as a build artifact ────────────────
+      - name: Upload Cucumber report
+        if: always()                        # upload even when tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: reports/cucumber/
+          retention-days: 14
+
+      # ── 7. Upload failure screenshots ─────────────────────────────────────
+      - name: Upload screenshots
+        if: failure()                       # only upload when something fails
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-screenshots
+          path: reports/screenshots/
+          retention-days: 7

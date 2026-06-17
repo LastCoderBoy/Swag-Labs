@@ -15,7 +15,6 @@ public class ProductsPage extends BasePage {
     private final By sortDropdown = By.cssSelector(".product_sort_container");
     private final By productName = By.cssSelector(".inventory_item_name");
     private final By productPrice = By.cssSelector(".inventory_item_price");
-    private final By cartBadgeCounter = By.cssSelector(".shopping_cart_badge");
 
     public ProductsPage(WebDriver driver, JavaScriptUtil jsUtil) {
         super(driver, jsUtil);
@@ -80,33 +79,11 @@ public class ProductsPage extends BasePage {
         return getText(getRemoveFromCartProductId(productName));
     }
 
-    public int getCartBadgeCounter(){
-        // Use findElements instead of waiting to check presence without timeout delay
-        List<WebElement> badgeElements = driver.findElements(cartBadgeCounter);
-        
-        if (badgeElements.isEmpty()) {
-            return 0; // Badge doesn't exist means cart is empty
-        }
-        
-        // Badge exists, now wait for it to be visible and get the count
-        try {
-            String badgeText = getText(cartBadgeCounter);
-            return Integer.parseInt(badgeText);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
 
     // ==================== PRIVATE METHODS ====================
 
     private By getAddToCartProductId(String productName){
         String buttonId = "add-to-cart-" + productName.toLowerCase().replace(" ", "-");
-        return By.id(buttonId);
-    }
-
-    private By getRemoveFromCartProductId(String productName){
-        String buttonId = "remove-" + productName.toLowerCase().replace(" ", "-");
         return By.id(buttonId);
     }
 }

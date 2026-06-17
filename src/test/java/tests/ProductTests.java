@@ -5,6 +5,7 @@ import enums.SortOption;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.CartPage;
 import pages.ProductsPage;
 
 import java.util.Comparator;
@@ -136,5 +137,16 @@ public class ProductTests extends BaseTest {
         // Remove second product from cart
         productsPage.clickRemoveFromCartButton(productName2);
         Assert.assertEquals(productsPage.getCartBadgeCounter(), 0, "Cart badge counter did not update to 0 after removing second product");
+    }
+
+    @Test
+    public void shouldDisplayCartPage_WhenCartIconIsClicked() {
+        // Given & When
+        CartPage cartPage = productsPage.clickCartButton();
+
+        boolean isCartHeaderVisible = cartPage.isCartPageHeaderDisplayed();
+
+        // Then
+        Assert.assertTrue(isCartHeaderVisible, "Cart page header is not displayed");
     }
 }

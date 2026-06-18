@@ -22,15 +22,14 @@ public class ProductTests extends BaseTest {
     }
 
     @Test
-    public void shouldDisplayProductsHeader_WhenProductsPageIsLoaded() {
+    public void shouldDisplayProductPageData_WhenProductsPageIsLoaded() {
+        // Given & When
+        productsPage.getNumberOfProducts();
+
+        // Then
+        Assert.assertTrue(productsPage.getNumberOfProducts() > 0, "No products found on the products page");
         Assert.assertTrue(productsPage.isProductsHeaderDisplayed(), "Products header is not displayed");
         Assert.assertEquals(productsPage.getProductsHeaderText(), "Products", "Products header text is incorrect");
-    }
-
-    @Test
-    public void shouldHasProducts_WhenProductsPageIsLoaded() {
-        productsPage.getNumberOfProducts();
-        Assert.assertTrue(productsPage.getNumberOfProducts() > 0, "No products found on the products page");
     }
 
     @Test
@@ -86,7 +85,7 @@ public class ProductTests extends BaseTest {
     // ====================================
 
     @Test
-    public void shouldDisplayRemoveButton_WhenAddToCartButtonIsClicked() {
+    public void shouldUpdateButtonAndCart_WhenAddToCartButtonIsClicked() {
         String productName = "Sauce Labs Backpack";
         productsPage.clickAddToCartButton(productName);
 

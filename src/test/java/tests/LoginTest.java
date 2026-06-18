@@ -5,18 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.ProductsPage;
+import testdata.TestData;
 
 @Slf4j
 public class LoginTest extends BaseTest {
-    private final String STANDARD_USERNAME = "standard_user";
-    private final String LOCKED_USERNAME = "locked_out_user";
-    private final String PASSWORD = "secret_sauce";
 
     @Test
     public void shouldLoginSuccessfully_WhenValidCredentialsProvided(){
         // Given & When
-        loginPage.enterUsername(STANDARD_USERNAME);
-        loginPage.enterPassword(PASSWORD);
+        loginPage.enterUsername(TestData.Credentials.STANDARD_USER);
+        loginPage.enterPassword(TestData.Credentials.PASSWORD);
         ProductsPage productsPage = loginPage.clickLoginButton();
 
         // Then
@@ -26,8 +24,8 @@ public class LoginTest extends BaseTest {
     @Test
     public void shouldGetLockedErrorMsg_WhenLockedCredentialsProvided(){
         // Given & When
-        loginPage.enterUsername(LOCKED_USERNAME);
-        loginPage.enterPassword(PASSWORD);
+        loginPage.enterUsername(TestData.Credentials.LOCKED_OUT_USER);
+        loginPage.enterPassword(TestData.Credentials.PASSWORD);
         loginPage.clickLoginButton();
 
         String actualErrorMsg = loginPage.getErrorMessage();

@@ -3,6 +3,7 @@ package stepDef;
 import context.CucumberContext;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import pages.LoginPage;
 
 public class Hooks {
     private final CucumberContext ctx;
@@ -16,7 +17,7 @@ public class Hooks {
         ctx.driver.get("https://www.saucedemo.com/");
         ctx.jsUtil.clearAllStorage();
         ctx.driver.navigate().refresh();
-        ctx.loginPage = new pages.LoginPage(ctx.driver, ctx.jsUtil);
+        ctx.loginPage = new LoginPage(ctx.driver, ctx.jsUtil);
     }
 
     @After
